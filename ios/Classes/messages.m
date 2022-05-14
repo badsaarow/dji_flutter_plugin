@@ -43,6 +43,10 @@ static id GetNullableObject(NSDictionary* dict, id key) {
 + (FLTMedia *)fromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
 @end
+@interface FLTFlightControlData ()
++ (FLTFlightControlData *)fromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
 
 @implementation FLTVersion
 + (instancetype)makeWithString:(nullable NSString *)string {
@@ -138,6 +142,31 @@ static id GetNullableObject(NSDictionary* dict, id key) {
 }
 @end
 
+@implementation FLTFlightControlData
++ (instancetype)makeWithPitch:(nullable NSNumber *)pitch
+    roll:(nullable NSNumber *)roll
+    yaw:(nullable NSNumber *)yaw
+    verticalThrottle:(nullable NSNumber *)verticalThrottle {
+  FLTFlightControlData* pigeonResult = [[FLTFlightControlData alloc] init];
+  pigeonResult.pitch = pitch;
+  pigeonResult.roll = roll;
+  pigeonResult.yaw = yaw;
+  pigeonResult.verticalThrottle = verticalThrottle;
+  return pigeonResult;
+}
++ (FLTFlightControlData *)fromMap:(NSDictionary *)dict {
+  FLTFlightControlData *pigeonResult = [[FLTFlightControlData alloc] init];
+  pigeonResult.pitch = GetNullableObject(dict, @"pitch");
+  pigeonResult.roll = GetNullableObject(dict, @"roll");
+  pigeonResult.yaw = GetNullableObject(dict, @"yaw");
+  pigeonResult.verticalThrottle = GetNullableObject(dict, @"verticalThrottle");
+  return pigeonResult;
+}
+- (NSDictionary *)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.pitch ? self.pitch : [NSNull null]), @"pitch", (self.roll ? self.roll : [NSNull null]), @"roll", (self.yaw ? self.yaw : [NSNull null]), @"yaw", (self.verticalThrottle ? self.verticalThrottle : [NSNull null]), @"verticalThrottle", nil];
+}
+@end
+
 @interface FLTDjiHostApiCodecReader : FlutterStandardReader
 @end
 @implementation FLTDjiHostApiCodecReader
@@ -148,9 +177,12 @@ static id GetNullableObject(NSDictionary* dict, id key) {
       return [FLTBattery fromMap:[self readValue]];
     
     case 129:     
-      return [FLTMedia fromMap:[self readValue]];
+      return [FLTFlightControlData fromMap:[self readValue]];
     
     case 130:     
+      return [FLTMedia fromMap:[self readValue]];
+    
+    case 131:     
       return [FLTVersion fromMap:[self readValue]];
     
     default:    
@@ -169,12 +201,16 @@ static id GetNullableObject(NSDictionary* dict, id key) {
     [self writeByte:128];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[FLTMedia class]]) {
+  if ([value isKindOfClass:[FLTFlightControlData class]]) {
     [self writeByte:129];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[FLTVersion class]]) {
+  if ([value isKindOfClass:[FLTMedia class]]) {
     [self writeByte:130];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[FLTVersion class]]) {
+    [self writeByte:131];
     [self writeValue:[value toMap]];
   } else 
 {
@@ -235,6 +271,24 @@ void FLTDjiHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLT
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
         FLTBattery *output = [api getBatteryLevelWithError:&error];
+        callback(wrapResult(output, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.DjiHostApi.getFlightControlData"
+        binaryMessenger:binaryMessenger
+        codec:FLTDjiHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(getFlightControlDataWithError:)], @"FLTDjiHostApi api (%@) doesn't respond to @selector(getFlightControlDataWithError:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FlutterError *error;
+        FLTFlightControlData *output = [api getFlightControlDataWithError:&error];
         callback(wrapResult(output, error));
       }];
     }
@@ -363,6 +417,49 @@ void FLTDjiHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLT
         NSString *arg_flightJson = args[0];
         FlutterError *error;
         [api startFlightJson:arg_flightJson error:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.DjiHostApi.setVirtualStickMode"
+        binaryMessenger:binaryMessenger
+        codec:FLTDjiHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(setVirtualStickModeEnabled:error:)], @"FLTDjiHostApi api (%@) doesn't respond to @selector(setVirtualStickModeEnabled:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSNumber *arg_enabled = args[0];
+        FlutterError *error;
+        [api setVirtualStickModeEnabled:arg_enabled error:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.DjiHostApi.sendStickControl"
+        binaryMessenger:binaryMessenger
+        codec:FLTDjiHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(sendStickControlRoll:pitch:yaw:throttle:error:)], @"FLTDjiHostApi api (%@) doesn't respond to @selector(sendStickControlRoll:pitch:yaw:throttle:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSNumber *arg_roll = args[0];
+        NSNumber *arg_pitch = args[1];
+        NSNumber *arg_yaw = args[2];
+        NSNumber *arg_throttle = args[3];
+        FlutterError *error;
+        [api sendStickControlRoll:arg_roll pitch:arg_pitch yaw:arg_yaw throttle:arg_throttle error:&error];
         callback(wrapResult(nil, error));
       }];
     }

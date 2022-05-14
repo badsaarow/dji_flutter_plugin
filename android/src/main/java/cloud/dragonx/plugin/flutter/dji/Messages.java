@@ -303,6 +303,84 @@ public class Messages {
       return pigeonResult;
     }
   }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class FlightControlData {
+    private @Nullable Double pitch;
+    public @Nullable Double getPitch() { return pitch; }
+    public void setPitch(@Nullable Double setterArg) {
+      this.pitch = setterArg;
+    }
+
+    private @Nullable Double roll;
+    public @Nullable Double getRoll() { return roll; }
+    public void setRoll(@Nullable Double setterArg) {
+      this.roll = setterArg;
+    }
+
+    private @Nullable Double yaw;
+    public @Nullable Double getYaw() { return yaw; }
+    public void setYaw(@Nullable Double setterArg) {
+      this.yaw = setterArg;
+    }
+
+    private @Nullable Double verticalThrottle;
+    public @Nullable Double getVerticalThrottle() { return verticalThrottle; }
+    public void setVerticalThrottle(@Nullable Double setterArg) {
+      this.verticalThrottle = setterArg;
+    }
+
+    public static class Builder {
+      private @Nullable Double pitch;
+      public @NonNull Builder setPitch(@Nullable Double setterArg) {
+        this.pitch = setterArg;
+        return this;
+      }
+      private @Nullable Double roll;
+      public @NonNull Builder setRoll(@Nullable Double setterArg) {
+        this.roll = setterArg;
+        return this;
+      }
+      private @Nullable Double yaw;
+      public @NonNull Builder setYaw(@Nullable Double setterArg) {
+        this.yaw = setterArg;
+        return this;
+      }
+      private @Nullable Double verticalThrottle;
+      public @NonNull Builder setVerticalThrottle(@Nullable Double setterArg) {
+        this.verticalThrottle = setterArg;
+        return this;
+      }
+      public @NonNull FlightControlData build() {
+        FlightControlData pigeonReturn = new FlightControlData();
+        pigeonReturn.setPitch(pitch);
+        pigeonReturn.setRoll(roll);
+        pigeonReturn.setYaw(yaw);
+        pigeonReturn.setVerticalThrottle(verticalThrottle);
+        return pigeonReturn;
+      }
+    }
+    @NonNull Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("pitch", pitch);
+      toMapResult.put("roll", roll);
+      toMapResult.put("yaw", yaw);
+      toMapResult.put("verticalThrottle", verticalThrottle);
+      return toMapResult;
+    }
+    static @NonNull FlightControlData fromMap(@NonNull Map<String, Object> map) {
+      FlightControlData pigeonResult = new FlightControlData();
+      Object pitch = map.get("pitch");
+      pigeonResult.setPitch((Double)pitch);
+      Object roll = map.get("roll");
+      pigeonResult.setRoll((Double)roll);
+      Object yaw = map.get("yaw");
+      pigeonResult.setYaw((Double)yaw);
+      Object verticalThrottle = map.get("verticalThrottle");
+      pigeonResult.setVerticalThrottle((Double)verticalThrottle);
+      return pigeonResult;
+    }
+  }
   private static class DjiHostApiCodec extends StandardMessageCodec {
     public static final DjiHostApiCodec INSTANCE = new DjiHostApiCodec();
     private DjiHostApiCodec() {}
@@ -313,9 +391,12 @@ public class Messages {
           return Battery.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)129:         
-          return Media.fromMap((Map<String, Object>) readValue(buffer));
+          return FlightControlData.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)130:         
+          return Media.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)131:         
           return Version.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
@@ -329,12 +410,16 @@ public class Messages {
         stream.write(128);
         writeValue(stream, ((Battery) value).toMap());
       } else 
-      if (value instanceof Media) {
+      if (value instanceof FlightControlData) {
         stream.write(129);
+        writeValue(stream, ((FlightControlData) value).toMap());
+      } else 
+      if (value instanceof Media) {
+        stream.write(130);
         writeValue(stream, ((Media) value).toMap());
       } else 
       if (value instanceof Version) {
-        stream.write(130);
+        stream.write(131);
         writeValue(stream, ((Version) value).toMap());
       } else 
 {
@@ -347,6 +432,7 @@ public class Messages {
   public interface DjiHostApi {
     @NonNull Version getPlatformVersion();
     @NonNull Battery getBatteryLevel();
+    @NonNull FlightControlData getFlightControlData();
     @NonNull void registerApp();
     @NonNull void connectDrone();
     @NonNull void disconnectDrone();
@@ -354,6 +440,8 @@ public class Messages {
     @NonNull void takeOff();
     @NonNull void land();
     @NonNull void start(String flightJson);
+    @NonNull void setVirtualStickMode(Boolean enabled);
+    @NonNull void sendStickControl(Double roll, Double pitch, Double yaw, Double throttle);
     @NonNull List<Media> getMediaList();
     @NonNull String downloadMedia(Long fileIndex);
     @NonNull Boolean deleteMedia(Long fileIndex);
@@ -392,6 +480,25 @@ public class Messages {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               Battery output = api.getBatteryLevel();
+              wrapped.put("result", output);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.DjiHostApi.getFlightControlData", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              FlightControlData output = api.getFlightControlData();
               wrapped.put("result", output);
             }
             catch (Error | RuntimeException exception) {
@@ -530,6 +637,66 @@ public class Messages {
                 throw new NullPointerException("flightJsonArg unexpectedly null.");
               }
               api.start(flightJsonArg);
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.DjiHostApi.setVirtualStickMode", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              Boolean enabledArg = (Boolean)args.get(0);
+              if (enabledArg == null) {
+                throw new NullPointerException("enabledArg unexpectedly null.");
+              }
+              api.setVirtualStickMode(enabledArg);
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.DjiHostApi.sendStickControl", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              Double rollArg = (Double)args.get(0);
+              if (rollArg == null) {
+                throw new NullPointerException("rollArg unexpectedly null.");
+              }
+              Double pitchArg = (Double)args.get(1);
+              if (pitchArg == null) {
+                throw new NullPointerException("pitchArg unexpectedly null.");
+              }
+              Double yawArg = (Double)args.get(2);
+              if (yawArg == null) {
+                throw new NullPointerException("yawArg unexpectedly null.");
+              }
+              Double throttleArg = (Double)args.get(3);
+              if (throttleArg == null) {
+                throw new NullPointerException("throttleArg unexpectedly null.");
+              }
+              api.sendStickControl(rollArg, pitchArg, yawArg, throttleArg);
               wrapped.put("result", null);
             }
             catch (Error | RuntimeException exception) {

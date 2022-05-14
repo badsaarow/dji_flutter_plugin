@@ -67,6 +67,7 @@ class DjiPlugin: FlutterPlugin, Messages.DjiHostApi, ActivityAware {
 
   var fltDjiFlutterApi: Messages.DjiFlutterApi? = null
   val fltDrone = Messages.Drone()
+  var fltFlightControlData: Messages.FlightControlData? = null
 
   private var drone: Aircraft? = null
   private var droneCurrentLocation: LocationCoordinate3D? = null // Note: this is different from DJI SDK iOS where CLLocation.coordinate is used (LocationCoordinate3D in dji-android is the same as CLLocation.coordinate in dji-ios).
@@ -121,6 +122,11 @@ class DjiPlugin: FlutterPlugin, Messages.DjiHostApi, ActivityAware {
   }
 
   override fun getBatteryLevel(): Messages.Battery {
+    TODO("Not yet implemented")
+  }
+
+
+  override fun getFlightControlData(): Messages.FlightControlData {
     TODO("Not yet implemented")
   }
 
@@ -327,6 +333,42 @@ class DjiPlugin: FlutterPlugin, Messages.DjiHostApi, ActivityAware {
       Log.d(TAG,"Landing Failed - No Flight Controller")
     }
   }
+
+  override fun setVirtualStickMode(enabled: Boolean) {
+    Log.d(TAG, "Virtual Stick Mode Enabled: $enabled")
+    if ((drone as Aircraft).flightController != null) {
+      (drone as Aircraft).flightController.setVirtualStickModeEnabled(enabled, null)
+    } else {
+      Log.d(TAG, "Virtual Stick Mode Failed - No Flight Controller")
+    }
+  }
+
+  override fun sendStickControl(pitch: Double, roll: Double, yaw: Double, throttle: Double) {
+    Log.d(TAG, "Virtual Stick Flight Control Data Sent")
+    if ((drone as Aircraft).flightController != null) {
+      // this.fltFlightControlData = Messages.FlightControlData(
+      //   pitch,
+      //   roll,
+      //   yaw,
+      //   throttle
+      // )
+      val tt =  dji.common.flightcontroller.virtualstick.FlightControlData(
+          pitch.toFloat(),
+          roll.toFloat(),
+          yaw.toFloat(),
+          throttle.toFloat()
+        )
+      // (drone as Aircraft).flightController.sendVirtualStickFlightControlData(
+      //   // Messages.FlightControlData(pitch, roll, yaw, throttle),
+      //   this.fltFlightControlData as cloud.dragonx.plugin.flutter.dji.Messages.FlightControlData,
+
+      //   null
+      // )
+    } else {
+      Log.d(TAG, "Virtual Stick Flight Control Data Failed - No Flight Controller")
+    }
+  }
+
 
   /** Timeline Methods **/
 

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FLTBattery;
 @class FLTDrone;
 @class FLTMedia;
+@class FLTFlightControlData;
 
 @interface FLTVersion : NSObject
 + (instancetype)makeWithString:(nullable NSString *)string;
@@ -53,6 +54,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber * fileIndex;
 @end
 
+@interface FLTFlightControlData : NSObject
++ (instancetype)makeWithPitch:(nullable NSNumber *)pitch
+    roll:(nullable NSNumber *)roll
+    yaw:(nullable NSNumber *)yaw
+    verticalThrottle:(nullable NSNumber *)verticalThrottle;
+@property(nonatomic, strong, nullable) NSNumber * pitch;
+@property(nonatomic, strong, nullable) NSNumber * roll;
+@property(nonatomic, strong, nullable) NSNumber * yaw;
+@property(nonatomic, strong, nullable) NSNumber * verticalThrottle;
+@end
+
 /// The codec used by FLTDjiHostApi.
 NSObject<FlutterMessageCodec> *FLTDjiHostApiGetCodec(void);
 
@@ -61,6 +73,8 @@ NSObject<FlutterMessageCodec> *FLTDjiHostApiGetCodec(void);
 - (nullable FLTVersion *)getPlatformVersionWithError:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.
 - (nullable FLTBattery *)getBatteryLevelWithError:(FlutterError *_Nullable *_Nonnull)error;
+/// @return `nil` only when `error != nil`.
+- (nullable FLTFlightControlData *)getFlightControlDataWithError:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.
 - (void)registerAppWithError:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.
@@ -75,6 +89,10 @@ NSObject<FlutterMessageCodec> *FLTDjiHostApiGetCodec(void);
 - (void)landWithError:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.
 - (void)startFlightJson:(NSString *)flightJson error:(FlutterError *_Nullable *_Nonnull)error;
+/// @return `nil` only when `error != nil`.
+- (void)setVirtualStickModeEnabled:(NSNumber *)enabled error:(FlutterError *_Nullable *_Nonnull)error;
+/// @return `nil` only when `error != nil`.
+- (void)sendStickControlRoll:(NSNumber *)roll pitch:(NSNumber *)pitch yaw:(NSNumber *)yaw throttle:(NSNumber *)throttle error:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.
 - (nullable NSArray<FLTMedia *> *)getMediaListWithError:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.

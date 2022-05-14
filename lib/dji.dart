@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as developer;
 import 'messages.dart';
 import 'flight.dart';
 
@@ -363,6 +364,21 @@ class Dji {
     Map<String, dynamic> flightJson = flight.toJson();
 
     await _api?.start(jsonEncode(flightJson));
+  }
+
+
+  static Future<void> sendStickControl(double i, double j, double k, double l) async {
+    developer.log('sendStickControl: $i, $j, $k, $l', name: kLogKindDjiFlutterPlugin);
+    
+    await _api?.sendStickControl(i, j, k, l);
+  }
+
+  static Future<void> controlStick({required Flight flight}) async {
+    Map<String, dynamic> flightJson = flight.toJson();
+
+    developer.log(jsonEncode(flightJson));
+    
+    await _api?.setVirtualStickMode(true);
   }
 
   /// Get the media files list from the Drone (SD card).

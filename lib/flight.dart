@@ -246,6 +246,31 @@ enum FlightElementType {
   stopRecordVideo,
 }
 
+/// Flight Control Data
+class FlightControlData {
+  final double pitch;
+  final double roll;
+  final double yaw;
+  final double verticalThrottle;
+
+  FlightControlData(this.pitch, this.roll, this.yaw, this.verticalThrottle);
+
+  FlightControlData.fromJson(Map<String, dynamic> json)
+      : this.pitch = json['pitch'],
+        this.roll = json['roll'],
+        this.yaw = json['yaw'],
+        this.verticalThrottle = json['verticalThrottle'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'pitch': this.pitch,
+      'roll': this.roll,
+      'yaw': this.yaw,
+      'verticalThrottle': this.verticalThrottle,
+    };
+  }
+}
+
 /// Flight Element.
 
 class FlightElement {

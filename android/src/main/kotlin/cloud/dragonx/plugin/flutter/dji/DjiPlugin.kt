@@ -343,27 +343,47 @@ class DjiPlugin: FlutterPlugin, Messages.DjiHostApi, ActivityAware {
     }
   }
 
+  // override fun setRollPitchControlMode(enabled: Int) {
+  //   Log.d(TAG, "setRollPitchControlModee Enabled: $enabled")
+  //   if ((drone as Aircraft).flightController != null) {
+  //     (drone as Aircraft).flightController.setRollPitchControlMode(enabled, null)
+  //   } else {
+  //     Log.d(TAG, "setRollPitchControlMode Failed - No Flight Controller")
+  //   }
+  // }
+
+  // override fun setYawControlMode(enabled: Int) {
+  //   Log.d(TAG, "setYawControlMode Enabled: $enabled")
+  //   if ((drone as Aircraft).flightController != null) {
+  //     (drone as Aircraft).flightController.setYawControlMode(enabled, null)
+  //   } else {
+  //     Log.d(TAG, "setYawControlMode Failed - No Flight Controller")
+  //   }
+  // }
+
+  //   override fun setVerticalControlMode(enabled: Int) {
+  //   Log.d(TAG, "setVerticalControlMode Enabled: $enabled")
+  //   if ((drone as Aircraft).flightController != null) {
+  //     (drone as Aircraft).flightController.setVerticalControlMode(enabled, null)
+  //   } else {
+  //     Log.d(TAG, "setVerticalControlMode Failed - No Flight Controller")
+  //   }
+  // }
+
+
   override fun sendStickControl(pitch: Double, roll: Double, yaw: Double, throttle: Double) {
     Log.d(TAG, "Virtual Stick Flight Control Data Sent")
     if ((drone as Aircraft).flightController != null) {
-      // this.fltFlightControlData = Messages.FlightControlData(
-      //   pitch,
-      //   roll,
-      //   yaw,
-      //   throttle
-      // )
-      val tt =  dji.common.flightcontroller.virtualstick.FlightControlData(
+      val controlData =  dji.common.flightcontroller.virtualstick.FlightControlData(
           pitch.toFloat(),
           roll.toFloat(),
           yaw.toFloat(),
           throttle.toFloat()
         )
-      // (drone as Aircraft).flightController.sendVirtualStickFlightControlData(
-      //   // Messages.FlightControlData(pitch, roll, yaw, throttle),
-      //   this.fltFlightControlData as cloud.dragonx.plugin.flutter.dji.Messages.FlightControlData,
-
-      //   null
-      // )
+      (drone as Aircraft).flightController.sendVirtualStickFlightControlData(
+        controlData,
+        null
+      )
     } else {
       Log.d(TAG, "Virtual Stick Flight Control Data Failed - No Flight Controller")
     }

@@ -48,6 +48,13 @@ abstract class DjiHostApi {
   void setVirtualStickMode(bool enabled);
   void sendStickControl(
       double roll, double pitch, double yaw, double throttle);
+  
+  
+  // void setRollPitchControlMode(int mode);
+  // void setYawControlMode(int mode);
+  // void setVerticalControlMode(int mode);
+
+
   // void setFlightMode(String flightMode);
   // void setFlightSpeed(double speed);
   // void setFlightAltitude(double altitude);

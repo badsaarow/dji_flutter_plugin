@@ -367,18 +367,36 @@ class Dji {
   }
 
 
-  static Future<void> sendStickControl(double i, double j, double k, double l) async {
-    developer.log('sendStickControl: $i, $j, $k, $l', name: kLogKindDjiFlutterPlugin);
+  // static Future<void> setRollPitchControlMode(int enabled) async {
+  //   developer.log('setRollPitchControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
     
-    await _api?.sendStickControl(i, j, k, l);
+  //   await _api?.setRollPitchControlMode(enabled);
+  // }
+
+  // static Future<void> setYawControlMode(int enabled) async {
+  //   developer.log('setYawControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
+    
+  //   await _api?.setYawControlMode(enabled);
+  // }
+
+  // static Future<void> setVerticalControlMode(int enabled) async {
+  //   developer.log('setVerticalControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
+    
+  //   await _api?.setVerticalControlMode(enabled);
+  // }
+
+
+  static Future<void> sendStickControl(double pitch, double roll, double yaw, double throttle) async {
+    developer.log('sendStickControl: $pitch, $roll, $yaw, $throttle', name: kLogKindDjiFlutterPlugin);
+    
+    // await _api?.setVirtualStickMode(true);
+    await _api?.sendStickControl(pitch, roll, yaw, throttle);
+    // await _api?.setVirtualStickMode(false);
   }
 
-  static Future<void> controlStick({required Flight flight}) async {
-    Map<String, dynamic> flightJson = flight.toJson();
 
-    developer.log(jsonEncode(flightJson));
-    
-    await _api?.setVirtualStickMode(true);
+  static Future<void> setVirtualStickMode(bool enabled) async {
+    await _api?.setVirtualStickMode(enabled);
   }
 
   /// Get the media files list from the Drone (SD card).

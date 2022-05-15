@@ -470,6 +470,66 @@ void FLTDjiHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<FLT
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.DjiHostApi.setRollPitchControlMode"
+        binaryMessenger:binaryMessenger
+        codec:FLTDjiHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(setRollPitchControlModeMode:error:)], @"FLTDjiHostApi api (%@) doesn't respond to @selector(setRollPitchControlModeMode:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSNumber *arg_mode = args[0];
+        FlutterError *error;
+        [api setRollPitchControlModeMode:arg_mode error:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.DjiHostApi.setYawControlMode"
+        binaryMessenger:binaryMessenger
+        codec:FLTDjiHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(setYawControlModeMode:error:)], @"FLTDjiHostApi api (%@) doesn't respond to @selector(setYawControlModeMode:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSNumber *arg_mode = args[0];
+        FlutterError *error;
+        [api setYawControlModeMode:arg_mode error:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.DjiHostApi.setVerticalControlMode"
+        binaryMessenger:binaryMessenger
+        codec:FLTDjiHostApiGetCodec()];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(setVerticalControlModeMode:error:)], @"FLTDjiHostApi api (%@) doesn't respond to @selector(setVerticalControlModeMode:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSNumber *arg_mode = args[0];
+        FlutterError *error;
+        [api setVerticalControlModeMode:arg_mode error:&error];
+        callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
         messageChannelWithName:@"dev.flutter.pigeon.DjiHostApi.getMediaList"
         binaryMessenger:binaryMessenger
         codec:FLTDjiHostApiGetCodec()];

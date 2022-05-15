@@ -50,9 +50,9 @@ abstract class DjiHostApi {
       double roll, double pitch, double yaw, double throttle);
   
   
-  // void setRollPitchControlMode(int mode);
-  // void setYawControlMode(int mode);
-  // void setVerticalControlMode(int mode);
+  void setRollPitchControlMode(double mode);
+  void setYawControlMode(double mode);
+  void setVerticalControlMode(double mode);
 
 
   // void setFlightMode(String flightMode);

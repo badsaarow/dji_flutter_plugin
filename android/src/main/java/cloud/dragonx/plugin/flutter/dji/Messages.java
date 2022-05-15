@@ -442,6 +442,9 @@ public class Messages {
     @NonNull void start(String flightJson);
     @NonNull void setVirtualStickMode(Boolean enabled);
     @NonNull void sendStickControl(Double roll, Double pitch, Double yaw, Double throttle);
+    @NonNull void setRollPitchControlMode(Double mode);
+    @NonNull void setYawControlMode(Double mode);
+    @NonNull void setVerticalControlMode(Double mode);
     @NonNull List<Media> getMediaList();
     @NonNull String downloadMedia(Long fileIndex);
     @NonNull Boolean deleteMedia(Long fileIndex);
@@ -697,6 +700,78 @@ public class Messages {
                 throw new NullPointerException("throttleArg unexpectedly null.");
               }
               api.sendStickControl(rollArg, pitchArg, yawArg, throttleArg);
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.DjiHostApi.setRollPitchControlMode", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              Double modeArg = (Double)args.get(0);
+              if (modeArg == null) {
+                throw new NullPointerException("modeArg unexpectedly null.");
+              }
+              api.setRollPitchControlMode(modeArg);
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.DjiHostApi.setYawControlMode", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              Double modeArg = (Double)args.get(0);
+              if (modeArg == null) {
+                throw new NullPointerException("modeArg unexpectedly null.");
+              }
+              api.setYawControlMode(modeArg);
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.DjiHostApi.setVerticalControlMode", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              Double modeArg = (Double)args.get(0);
+              if (modeArg == null) {
+                throw new NullPointerException("modeArg unexpectedly null.");
+              }
+              api.setVerticalControlMode(modeArg);
               wrapped.put("result", null);
             }
             catch (Error | RuntimeException exception) {

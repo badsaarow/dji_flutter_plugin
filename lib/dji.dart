@@ -367,23 +367,23 @@ class Dji {
   }
 
 
-  // static Future<void> setRollPitchControlMode(int enabled) async {
-  //   developer.log('setRollPitchControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
+  static Future<void> setRollPitchControlMode(double enabled) async {
+    developer.log('setRollPitchControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
     
-  //   await _api?.setRollPitchControlMode(enabled);
-  // }
+    await _api?.setRollPitchControlMode(enabled);
+  }
 
-  // static Future<void> setYawControlMode(int enabled) async {
-  //   developer.log('setYawControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
+  static Future<void> setYawControlMode(double enabled) async {
+    developer.log('setYawControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
     
-  //   await _api?.setYawControlMode(enabled);
-  // }
+    await _api?.setYawControlMode(enabled);
+  }
 
-  // static Future<void> setVerticalControlMode(int enabled) async {
-  //   developer.log('setVerticalControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
+  static Future<void> setVerticalControlMode(double enabled) async {
+    developer.log('setVerticalControlMode: $enabled', name: kLogKindDjiFlutterPlugin);
     
-  //   await _api?.setVerticalControlMode(enabled);
-  // }
+    await _api?.setVerticalControlMode(enabled);
+  }
 
 
   static Future<void> sendStickControl(double pitch, double roll, double yaw, double throttle) async {

@@ -94,6 +94,12 @@ NSObject<FlutterMessageCodec> *FLTDjiHostApiGetCodec(void);
 /// @return `nil` only when `error != nil`.
 - (void)sendStickControlRoll:(NSNumber *)roll pitch:(NSNumber *)pitch yaw:(NSNumber *)yaw throttle:(NSNumber *)throttle error:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.
+- (void)setRollPitchControlModeMode:(NSNumber *)mode error:(FlutterError *_Nullable *_Nonnull)error;
+/// @return `nil` only when `error != nil`.
+- (void)setYawControlModeMode:(NSNumber *)mode error:(FlutterError *_Nullable *_Nonnull)error;
+/// @return `nil` only when `error != nil`.
+- (void)setVerticalControlModeMode:(NSNumber *)mode error:(FlutterError *_Nullable *_Nonnull)error;
+/// @return `nil` only when `error != nil`.
 - (nullable NSArray<FLTMedia *> *)getMediaListWithError:(FlutterError *_Nullable *_Nonnull)error;
 /// @return `nil` only when `error != nil`.
 - (nullable NSString *)downloadMediaFileIndex:(NSNumber *)fileIndex error:(FlutterError *_Nullable *_Nonnull)error;

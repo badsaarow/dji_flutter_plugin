@@ -343,32 +343,36 @@ class DjiPlugin: FlutterPlugin, Messages.DjiHostApi, ActivityAware {
     }
   }
 
-  // override fun setRollPitchControlMode(enabled: Int) {
-  //   Log.d(TAG, "setRollPitchControlModee Enabled: $enabled")
-  //   if ((drone as Aircraft).flightController != null) {
-  //     (drone as Aircraft).flightController.setRollPitchControlMode(enabled, null)
-  //   } else {
-  //     Log.d(TAG, "setRollPitchControlMode Failed - No Flight Controller")
-  //   }
-  // }
+  override fun setRollPitchControlMode(enabled: Double) {
+    Log.d(TAG, "setRollPitchControlModee Enabled: $enabled")
+    if ((drone as Aircraft).flightController != null) {
+      
+      val param = dji.common.flightcontroller.virtualstick.RollPitchControlMode.ANGLE; // VELOCITY
+      (drone as Aircraft).flightController.setRollPitchControlMode(param)
+    } else {
+      Log.d(TAG, "setRollPitchControlMode Failed - No Flight Controller")
+    }
+  }
 
-  // override fun setYawControlMode(enabled: Int) {
-  //   Log.d(TAG, "setYawControlMode Enabled: $enabled")
-  //   if ((drone as Aircraft).flightController != null) {
-  //     (drone as Aircraft).flightController.setYawControlMode(enabled, null)
-  //   } else {
-  //     Log.d(TAG, "setYawControlMode Failed - No Flight Controller")
-  //   }
-  // }
+  override fun setYawControlMode(enabled: Double) {
+    Log.d(TAG, "setYawControlMode Enabled: $enabled")
+    if ((drone as Aircraft).flightController != null) {
+      val param = dji.common.flightcontroller.virtualstick.YawControlMode.ANGLE; // VELOCITY
+      (drone as Aircraft).flightController.setYawControlMode(param)
+    } else {
+      Log.d(TAG, "setYawControlMode Failed - No Flight Controller")
+    }
+  }
 
-  //   override fun setVerticalControlMode(enabled: Int) {
-  //   Log.d(TAG, "setVerticalControlMode Enabled: $enabled")
-  //   if ((drone as Aircraft).flightController != null) {
-  //     (drone as Aircraft).flightController.setVerticalControlMode(enabled, null)
-  //   } else {
-  //     Log.d(TAG, "setVerticalControlMode Failed - No Flight Controller")
-  //   }
-  // }
+  override fun setVerticalControlMode(enabled: Double) {
+    Log.d(TAG, "setVerticalControlMode Enabled: $enabled")
+    if ((drone as Aircraft).flightController != null) {
+      val param = dji.common.flightcontroller.virtualstick.VerticalControlMode.POSITION; // VELOCITY
+      (drone as Aircraft).flightController.setVerticalControlMode(param)
+    } else {
+      Log.d(TAG, "setVerticalControlMode Failed - No Flight Controller")
+    }
+  }
 
 
   override fun sendStickControl(pitch: Double, roll: Double, yaw: Double, throttle: Double) {

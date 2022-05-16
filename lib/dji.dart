@@ -389,7 +389,7 @@ class Dji {
   static Future<void> sendStickControl(double pitch, double roll, double yaw, double throttle) async {
     developer.log('sendStickControl: $pitch, $roll, $yaw, $throttle', name: kLogKindDjiFlutterPlugin);
     
-    // await _api?.setVirtualStickMode(true);
+    await _api?.setVirtualStickMode(true);
     await _api?.sendStickControl(pitch, roll, yaw, throttle);
     // await _api?.setVirtualStickMode(false);
   }
